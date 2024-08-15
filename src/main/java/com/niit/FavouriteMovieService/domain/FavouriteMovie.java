@@ -28,6 +28,9 @@ public class FavouriteMovie {
         this.isFavorite = isFavorite;
     }
 
+    public FavouriteMovie() {
+    }
+
     @Override
     public String toString() {
         return "FavouriteMovie{" +

@@ -2,39 +2,41 @@ package com.niit.FavouriteMovieService.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document
 public class User {
     private String userId;
-    private String firstname;
-    private String lastname;
     private String username;
     private String password;
-    private  String email;
+    private String email;
     private Long phoneNumber;
-    private FavouriteMovie movieDetails;
+    private List<FavouriteMovie> movieDetails;
+    private String imageUrl;
 
-    public User(String userId, String firstname, String lastname, String username, String password, String email, Long phoneNumber, FavouriteMovie movieDetails) {
+    public User(String userId, String username, String password, String email, Long phoneNumber, List<FavouriteMovie> movieDetails, String imageUrl) {
         this.userId = userId;
-        this.firstname = firstname;
-        this.lastname = lastname;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.movieDetails = movieDetails;
+        this.imageUrl = imageUrl;
+    }
+
+    public User() {
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "userId='" + userId + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber=" + phoneNumber +
                 ", movieDetails=" + movieDetails +
+                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 
@@ -44,22 +46,6 @@ public class User {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
     }
 
     public String getUsername() {
@@ -94,11 +80,19 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public FavouriteMovie getMovieDetails() {
+    public List<FavouriteMovie> getMovieDetails() {
         return movieDetails;
     }
 
-    public void setMovieDetails(FavouriteMovie movieDetails) {
+    public void setMovieDetails(List<FavouriteMovie> movieDetails) {
         this.movieDetails = movieDetails;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
