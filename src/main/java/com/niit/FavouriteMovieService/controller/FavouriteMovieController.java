@@ -4,6 +4,8 @@ import com.niit.FavouriteMovieService.domain.User;
 import com.niit.FavouriteMovieService.exception.UserAlreadyExistException;
 import com.niit.FavouriteMovieService.exception.UserNotFoundException;
 import com.niit.FavouriteMovieService.service.IFavouriteMovieService;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +33,10 @@ public class FavouriteMovieController {
     return responseEntity;
     }
 
-    @PutMapping("/update")
-    public ResponseEntity updateUser(@RequestBody User user) throws UserNotFoundException{
+    @PutMapping("/user/update")
+    public ResponseEntity updateUser(@RequestBody User user, HttpServletRequest request) throws UserNotFoundException{
     try{
-        User updatedUser=iFavouriteMovieService.updateUser(user);
+        User updatedUser=iFavouriteMovieService.updateUser(user,getUserIdFromClaims(request));
         responseEntity=new ResponseEntity<>(updatedUser,HttpStatus.OK);
     } catch (UserNotFoundException e) {
         throw new UserNotFoundException();
@@ -42,5 +44,11 @@ public class FavouriteMovieController {
         responseEntity=new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return responseEntity;
+    }
+
+    private String getUserIdFromClaims(HttpServletRequest request){
+        Claims claims = (Claims) request.getAttribute("claims");
+        System.out.println("User ID from claims :: " + claims.getSubject());
+        return claims.getSubject();
     }
 }

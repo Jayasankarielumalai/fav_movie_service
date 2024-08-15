@@ -6,5 +6,5 @@ import com.niit.FavouriteMovieService.exception.UserNotFoundException;
 
 public interface IFavouriteMovieService {
     User registerUser(User user) throws UserAlreadyExistException;
-    User updateUser(User user) throws UserNotFoundException;
+    User updateUser(User user,String userId) throws UserNotFoundException;
 }

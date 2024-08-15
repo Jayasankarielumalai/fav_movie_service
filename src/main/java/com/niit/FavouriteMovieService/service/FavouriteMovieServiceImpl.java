@@ -26,8 +26,8 @@ public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
     }
 
     @Override
-    public User updateUser(User user) throws UserNotFoundException {
-        User existingUser=iFavouriteMovieRepository.findById(user.getUserId()).get();
+    public User updateUser(User user,String userId) throws UserNotFoundException {
+        User existingUser=iFavouriteMovieRepository.findById(userId).get();
         if (existingUser==null){
             throw new UserNotFoundException();
         }
