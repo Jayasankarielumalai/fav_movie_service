@@ -1,7 +1,10 @@
 package com.niit.FavouriteMovieService.domain;
 
+import org.springframework.data.annotation.Id;
+
 import java.util.List;
 public class FavouriteMovie {
+    @Id
     private String movieId;
     private String movieName;
     private Double rating;
