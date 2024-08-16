@@ -1,6 +1,7 @@
 package com.niit.FavouriteMovieService.service;
 
 import com.niit.FavouriteMovieService.domain.User;
+import com.niit.FavouriteMovieService.exception.MovieNotFoundException;
 import com.niit.FavouriteMovieService.exception.UserAlreadyExistException;
 import com.niit.FavouriteMovieService.exception.UserNotFoundException;
 
@@ -12,7 +13,7 @@ public interface IFavouriteMovieService {
 
 
     //New method to delete a user
-    void deleteUser(String userId) throws UserNotFoundException;
+    void deleteUser(String userId,String movieId) throws UserNotFoundException,MovieNotFoundException;
 
     // new method to saerch a user based on moviename
     List<User> searchUsersByMovieName(String movieName) throws UserNotFoundException;

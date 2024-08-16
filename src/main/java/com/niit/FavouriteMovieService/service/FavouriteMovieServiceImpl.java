@@ -1,6 +1,8 @@
 package com.niit.FavouriteMovieService.service;
 
+import com.niit.FavouriteMovieService.domain.FavouriteMovie;
 import com.niit.FavouriteMovieService.domain.User;
+import com.niit.FavouriteMovieService.exception.MovieNotFoundException;
 import com.niit.FavouriteMovieService.exception.UserAlreadyExistException;
 import com.niit.FavouriteMovieService.exception.UserNotFoundException;
 import com.niit.FavouriteMovieService.repository.IFavouriteMovieRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
@@ -50,10 +53,24 @@ public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
     }
 
     @Override
-    public void deleteUser(String userId) throws UserNotFoundException {
-        User existingUser = iFavouriteMovieRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        iFavouriteMovieRepository.delete(existingUser);
+    public void deleteUser(String userId, String movieId) throws UserNotFoundException, MovieNotFoundException {
+        User existingUser = iFavouriteMovieRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        List<FavouriteMovie> movieDetails = existingUser.getMovieDetails();
+        Optional<FavouriteMovie> movieToDelete = movieDetails.stream()
+                .filter(movie -> movie.getMovieId().equals(movieId))
+                .findFirst();
+
+        if (movieToDelete.isPresent()) {
+            movieDetails.remove(movieToDelete.get());
+            existingUser.setMovieDetails(movieDetails);
+            iFavouriteMovieRepository.save(existingUser);
+        } else {
+            throw new MovieNotFoundException();
+        }
     }
+
 
     @Override
     public List<User> searchUsersByMovieName(String movieName) throws UserNotFoundException {
