@@ -7,6 +7,8 @@ import com.niit.FavouriteMovieService.repository.IFavouriteMovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
     IFavouriteMovieRepository iFavouriteMovieRepository;
@@ -45,5 +47,20 @@ public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
         }
 
         return iFavouriteMovieRepository.save(existingUser);
+    }
+
+    @Override
+    public void deleteUser(String userId) throws UserNotFoundException {
+        User existingUser = iFavouriteMovieRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+        iFavouriteMovieRepository.delete(existingUser);
+    }
+
+    @Override
+    public List<User> searchUsersByMovieName(String movieName) throws UserNotFoundException {
+        List<User> users = iFavouriteMovieRepository.findByMovieDetailsMovieName(movieName);
+        if (users.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        return users;
     }
 }
