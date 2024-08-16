@@ -9,6 +9,7 @@ import com.niit.FavouriteMovieService.repository.IFavouriteMovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
     }
 
     @Override
-    public void deleteUser(String userId, String movieId) throws UserNotFoundException, MovieNotFoundException {
+    public void deleteUseronlyFavouriteMovie(String userId, String movieId) throws UserNotFoundException, MovieNotFoundException {
         User existingUser = iFavouriteMovieRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
@@ -80,4 +81,39 @@ public class FavouriteMovieServiceImpl implements IFavouriteMovieService{
         }
         return users;
     }
+
+    @Override
+    public User saveFavouriteMovieToList(FavouriteMovie favouriteMovie, String userId) throws UserNotFoundException {
+        // Save the product to the User
+        if(iFavouriteMovieRepository.findById(userId).isEmpty())
+        {
+            throw new UserNotFoundException();
+        }
+        User user = iFavouriteMovieRepository.findByUserId(userId);
+        if(user.getMovieDetails() == null)
+        {
+            user.setMovieDetails(Arrays.asList(favouriteMovie));
+        }
+        else {
+            List<FavouriteMovie> products = user.getMovieDetails();
+            products.add(favouriteMovie);
+            user.setMovieDetails(products);
+        }
+        return iFavouriteMovieRepository.save(user);    }
+
+    @Override
+    public List<FavouriteMovie> getAllFavouriteMoviesFromList(String userId) throws UserNotFoundException {
+        // Get all products from the User list
+        if(iFavouriteMovieRepository.findById(userId).isEmpty())
+        {
+            throw new UserNotFoundException();
+        }
+        return iFavouriteMovieRepository.findById(userId).get().getMovieDetails();
+    }
+
 }
+
+
+
+
+

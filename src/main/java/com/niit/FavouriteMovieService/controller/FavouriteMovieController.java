@@ -1,5 +1,6 @@
 package com.niit.FavouriteMovieService.controller;
 
+import com.niit.FavouriteMovieService.domain.FavouriteMovie;
 import com.niit.FavouriteMovieService.domain.User;
 import com.niit.FavouriteMovieService.exception.MovieNotFoundException;
 import com.niit.FavouriteMovieService.exception.UserAlreadyExistException;
@@ -49,11 +50,45 @@ public class FavouriteMovieController {
     return responseEntity;
     }
 
+
+    @PostMapping("/user/saveFavouriteMovie")
+    public ResponseEntity<?> saveMovieToList(@RequestBody FavouriteMovie favouriteMovie, HttpServletRequest request) throws UserNotFoundException{
+        // add a product to a specific user,
+        // return 201 status if track is saved else 500 status
+        try {
+            System.out.println("header" + request.getHeader("Authorization"));
+            Claims claims = (Claims) request.getAttribute("claims");
+            System.out.println("userId from claims :: " + claims.getSubject());
+            String userId = claims.getSubject();
+            System.out.println("userId :: " + userId);
+            responseEntity = new ResponseEntity<>(iFavouriteMovieService.saveFavouriteMovieToList(favouriteMovie, userId), HttpStatus.CREATED);
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException();
+        }
+        return responseEntity;    }
+
+
+    @GetMapping("/user/getAllFavouriteMovies")
+    public ResponseEntity<?> getAllMoviesFromList(HttpServletRequest request) throws UserNotFoundException {
+        // list all products of a specific user,
+        // return 200 status if track is saved else 500 status
+        try {
+            System.out.println("header" + request.getHeader("Authorization"));
+            Claims claims = (Claims) request.getAttribute("claims");
+            System.out.println("userId from claims :: " + claims.getSubject());
+            String userId = claims.getSubject();
+            System.out.println("userId :: " + userId);
+            responseEntity = new ResponseEntity<>(iFavouriteMovieService.getAllFavouriteMoviesFromList(userId), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException();
+        }
+        return responseEntity;    }
+
     //New method to delete a user
     @DeleteMapping("/{userId}/movies/{movieId}")
     public ResponseEntity<?> deleteMovieFromUserFavorites(@PathVariable String userId, @PathVariable String movieId) {
         try {
-            iFavouriteMovieService.deleteUser(userId, movieId);
+            iFavouriteMovieService.deleteUseronlyFavouriteMovie(userId, movieId);
             return new ResponseEntity<>("Movie deleted successfully from user's favorites.", HttpStatus.OK);
         } catch (UserNotFoundException | MovieNotFoundException e) {
             // Use e.getMessage() to provide the error message in the response body

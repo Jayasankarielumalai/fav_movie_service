@@ -7,5 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IFavouriteMovieRepository extends MongoRepository<User,String> {
+
+    User findByUserId(String userId);
     List<User> findByMovieDetailsMovieName(String movieName);//based moviename search for all movoies
 }
